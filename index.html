@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نظام إدارة المتجر</title>
+    <title>Gestion Magasin</title>
 
-    <!-- إعدادات التثبيت وتطبيق PWA بدون متصفح لـ iPhone و Android -->
+    <!-- إعدادات التثبيت كـ تطبيق PWA مستقل لـ iPhone و Android -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="المتجر">
+    <meta name="apple-mobile-web-app-title" content="Magasin">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#2563eb">
-    <link rel="manifest" href='data:application/manifest+json,{"name":"نظام إدارة المتجر","short_name":"المتجر","start_url":".","display":"standalone","background_color":"#f4f6fa","theme_color":"#2563eb","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/3135/3135715.png","sizes":"512x512","type":"image/png"}]}'>
+    <link rel="manifest" href="./manifest.json">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -963,18 +963,6 @@
         </div>
     </div>
 
-    <!-- شريط التثبيت الذكي كتطبيق للهواتف (PWA Banner) -->
-    <div id="pwa-install-banner" style="display:none; position:fixed; bottom:16px; left:14px; right:14px; background:#1e293b; color:white; padding:12px 16px; border-radius:14px; box-shadow:0 8px 24px rgba(0,0,0,0.3); z-index:9999; justify-content:space-between; align-items:center;">
-        <div style="font-size:9pt; line-height:1.4;">
-            <b style="display:block; font-size:10pt; color:#60a5fa;">📲 تثبيت التطبيق</b>
-            <span id="pwa-guide-text">أضف التطبيق لشاشتك لفتحه بدون شريط المتصفح</span>
-        </div>
-        <div style="display:flex; gap:8px; align-items:center;">
-            <button id="pwa-install-btn" style="background:#2563eb; color:white; border:none; padding:7px 12px; border-radius:8px; font-weight:bold; font-size:8.5pt; cursor:pointer;">تثبيت ➕</button>
-            <button onclick="document.getElementById('pwa-install-banner').style.display='none'" style="background:none; border:none; color:#94a3b8; font-size:14pt; cursor:pointer;">✕</button>
-        </div>
-    </div>
-
     <script>
         window.records = JSON.parse(localStorage.getItem('shop_records')) || [];
         window.debts = JSON.parse(localStorage.getItem('shop_debts')) || [];
@@ -1026,7 +1014,7 @@
                 nav_backup: "النسخ الاحتياطي والبيانات",
                 logout: "تسجيل الخروج",
                 edit_photo: "📷 تعديل",
-                btn_edit_shop_name: "✏️️ تعديل اسم المحل",
+                btn_edit_shop_name: "✏️ تعديل اسم المحل",
                 btn_ticket_settings: "🧾 تخصيص التيكيت",
                 btn_general_settings: "🌐 اللغة والعملة",
                 btn_worker_code: "🔑 كود ربط العامل",
@@ -1123,7 +1111,7 @@
                 nav_backup: "Sauvegarde & Données",
                 logout: "Déconnexion",
                 edit_photo: "📷 Modifier",
-                btn_edit_shop_name: "✏️️ Modifier nom du magasin",
+                btn_edit_shop_name: "✏️ Modifier nom du magasin",
                 btn_ticket_settings: "🧾 Personnaliser le Ticket",
                 btn_general_settings: "🌐 Langue et Devise",
                 btn_worker_code: "🔑 Code d'accès Employé",
@@ -1185,7 +1173,7 @@
                 lbl_stock_qty: "Quantité en rayon:",
                 btn_save_stock: "💾 Enregistrer au Stock",
                 ticket_preview_title: "🧾 Ticket de Caisse",
-                btn_print_ticket: "🖨️ Imprimer Ticket",
+                btn_print_ticket: "🖨️️ Imprimer Ticket",
                 btn_send_whatsapp: "📲 Envoyer WhatsApp (Image)",
                 lbl_ticket_phone: "Numéro de tél sur le ticket:",
                 lbl_ticket_address: "Adresse sur le ticket:",
@@ -1271,7 +1259,7 @@
                 lbl_debt_advance: "Paid amount (advance):",
                 btn_save: "✅ Save",
                 btn_save_ticket: "🧾 Save & Ticket",
-                manage_cats_title: "⚙ Categories Management",
+                manage_cats_title: "⚙️ Categories Management",
                 report_dialog_title: "📊 Activity Financial Report",
                 btn_print_report: "🖨️ Print Report",
                 btn_close: "Close ✖",
@@ -1724,12 +1712,12 @@
             window.openModal('modal-report-view');
         };
 
-        // 1. زر الطباعة المباشرة (حل مشكلة التعليق على آيفون وأندرويد)
+        // 1. زر الطباعة المباشرة لجميع الهواتف والطابعات
         window.printTicketDirectly = function() {
             window.print();
         };
 
-        // 2. زر الواتساب ومشاركة التيكيت كصورة PNG حقيقية بدلاً من نص
+        // 2. زر الواتساب ومشاركة التيكيت كصورة PNG حقيقية
         window.shareTicketWhatsapp = async function() {
             const btn = document.getElementById('btn-share-whatsapp');
             const target = document.getElementById('ticket-printable-node') || document.getElementById('ticket-modal-content');
@@ -1739,7 +1727,6 @@
             if (btn) btn.innerText = "⏳ جاري إعداد الصورة...";
 
             try {
-                // إنشاء نسخة مؤقتة نظيفة خارج الـ modal لتفادي تعليق Safari ومكتبة التصوير
                 const clone = target.cloneNode(true);
                 clone.style.width = "320px";
                 clone.style.padding = "16px";
@@ -1776,10 +1763,9 @@
                                 text: `وصل شراء - ${window.shopName}`
                             });
                         } catch (err) {
-                            // تم إلغاء المشاركة من المستخدم
+                            // تم إلغاء المشاركة
                         }
                     } else {
-                        // خيار بديل إذا كان المتصفح قديماً جداً (تنزيل الصورة مباشرة)
                         const link = document.createElement('a');
                         link.download = fileName;
                         link.href = URL.createObjectURL(blob);
@@ -2209,7 +2195,7 @@
                                 <span class="op-title">📦 [${r.category||'عام'}] ${r.note||''}</span>
                                 <div>
                                     ${isWorkerEntry ? 
-                                        `<span class="role-badge worker">👷‍♂️️ العامل</span>` : 
+                                        `<span class="role-badge worker">👷‍♂️ العامل</span>` : 
                                         `<span class="role-badge admin">👑 المدير</span>`}
                                 </div>
                             </div>
@@ -2906,37 +2892,11 @@
             window.initCategoryList();
             window.updateUI();
 
-            // فحص وتشغيل لافتة التثبيت للهواتف
-            const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
-            if (!isStandalone) {
-                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-                const banner = document.getElementById('pwa-install-banner');
-                const guideText = document.getElementById('pwa-guide-text');
-                const installBtn = document.getElementById('pwa-install-btn');
-
-                if (banner) {
-                    banner.style.display = 'flex';
-                    if (isIOS) {
-                        guideText.innerHTML = 'اضغط على زر المشاركة <b><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></b> ثم <b>"إضافة للشاشة الرئيسية"</b>';
-                        installBtn.style.display = 'none';
-                    } else {
-                        let deferredPrompt;
-                        window.addEventListener('beforeinstallprompt', (e) => {
-                            e.preventDefault();
-                            deferredPrompt = e;
-                            installBtn.style.display = 'block';
-                        });
-
-                        installBtn.addEventListener('click', async () => {
-                            if (deferredPrompt) {
-                                deferredPrompt.prompt();
-                                const { outcome } = await deferredPrompt.userChoice;
-                                if (outcome === 'accepted') banner.style.display = 'none';
-                                deferredPrompt = null;
-                            }
-                        });
-                    }
-                }
+            // تسجيل Service Worker الخاص بـ PWA
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('SW Registered', reg))
+                    .catch(err => console.log('SW Error', err));
             }
         });
     </script>
