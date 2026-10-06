@@ -11,34 +11,59 @@
     <meta name="apple-mobile-web-app-title" content="Magasin">
     <link rel="apple-touch-icon" href="./logo.png">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#2563eb">
+    <meta name="theme-color" content="#0f172a">
     <link rel="manifest" href="./manifest.json">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
-            --bg-color: #f4f6fa;
-            --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --accent-green: #10b981;
-            --accent-blue: #2563eb;
-            --accent-gold: #f59e0b;
-            --accent-purple: #8b5cf6;
-            --accent-orange: #f97316;
-            --border-color: #e2e8f0;
-            --danger: #ef4444;
-            --shadow: 0 2px 4px rgba(0,0,0,0.02);
+            /* وضع نهاري فائق الوضوح ومريح للعين (Silver Matte 3D) */
+            --bg-color: radial-gradient(circle at 20% 20%, #e2e8f0 0%, #cbd5e1 60%, #94a3b8 100%);
+            --card-bg: linear-gradient(145deg, #ffffff 0%, #e2e8f0 100%);
+            --card-border-top: rgba(255, 255, 255, 0.9);
+            --card-border-bottom: rgba(15, 23, 42, 0.2);
+            --card-border-side: rgba(15, 23, 42, 0.1);
+            
+            --text-main: #0b1329;
+            --text-muted: #334155;
+            
+            --accent-green: #047857;
+            --accent-blue: #0284c7;
+            --accent-gold: #b45309;
+            --accent-purple: #6d28d9;
+            --accent-orange: #c2410c;
+            
+            --border-color: rgba(15, 23, 42, 0.14);
+            --inner-bg: #dde3ec;
+            --input-border: #94a3b8;
+            --danger: #b91c1c;
+            --shadow: 0 10px 22px -3px rgba(15, 23, 42, 0.22), 0 4px 8px -2px rgba(15, 23, 42, 0.1);
+            --op-card-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(226, 232, 240, 0.9));
         }
 
         [data-theme="dark"] {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
+            /* الوضع الليلي العميق 3D */
+            --bg-color: radial-gradient(circle at 20% 20%, #1e1b4b 0%, #0f172a 50%, #022c22 100%);
+            --card-bg: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.95));
+            --card-border-top: rgba(255, 255, 255, 0.25);
+            --card-border-bottom: rgba(0, 0, 0, 0.6);
+            --card-border-side: rgba(255, 255, 255, 0.1);
+            
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --border-color: #334155;
-            --shadow: 0 2px 4px rgba(0,0,0,0.2);
+            --accent-green: #10b981;
+            --accent-blue: #38bdf8;
+            --accent-gold: #f59e0b;
+            --accent-purple: #8b5cf6;
+            --accent-orange: #f97316;
+            
+            --border-color: rgba(255, 255, 255, 0.12);
+            --inner-bg: #090d16;
+            --input-border: rgba(255, 255, 255, 0.08);
+            --danger: #ef4444;
+            --shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.6);
+            --op-card-bg: linear-gradient(145deg, rgba(30, 41, 59, 0.6), rgba(15, 23, 42, 0.8));
         }
 
         * {
@@ -49,7 +74,8 @@
         }
 
         body {
-            background-color: var(--bg-color);
+            background: var(--bg-color);
+            background-attachment: fixed;
             color: var(--text-main);
             padding: 12px;
             padding-top: 14px;
@@ -57,14 +83,22 @@
             min-height: 100vh;
             overflow-x: hidden;
             width: 100%;
+            transition: background 0.25s ease, color 0.25s ease;
         }
 
+        /* الهيدر العلوي */
         .app-header {
             display: flex; justify-content: space-between; align-items: center;
-            background-color: var(--card-bg); padding: 10px 14px;
-            border-radius: 14px; margin-bottom: 12px; box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
+            background: var(--card-bg); padding: 10px 14px;
+            border-radius: 18px; margin-bottom: 14px; 
+            border-top: 1.5px solid var(--card-border-top);
+            border-bottom: 2px solid var(--card-border-bottom);
+            border-inline: 1px solid var(--card-border-side);
+            box-shadow: var(--shadow);
             position: relative;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            z-index: 100;
         }
         .header-left { display: flex; align-items: center; gap: 8px; }
         .header-title { font-size: 12pt; font-weight: bold; flex: 1; text-align: center; }
@@ -75,28 +109,30 @@
             width: 38px; height: 38px; border-radius: 50%; cursor: pointer; 
             display: flex; align-items: center; justify-content: center; 
             font-weight: bold; color: white; background-color: var(--accent-purple); 
-            overflow: hidden; border: 2px solid var(--card-bg); box-shadow: 0 0 0 2px var(--accent-blue); 
+            overflow: hidden; border: 2px solid rgba(255,255,255,0.3); box-shadow: 0 0 10px rgba(56, 189, 248, 0.4); 
             font-size: 11pt;
         }
 
+        /* القائمة الجانبية */
         .drawer-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 4000;
+            background: rgba(0,0,0,0.65); z-index: 4000;
             display: none; opacity: 0; transition: opacity 0.25s ease;
+            backdrop-filter: blur(5px);
         }
         .drawer-overlay.active { display: block; opacity: 1; }
 
         .drawer-sidebar {
-            position: fixed; top: 0; width: 270px; height: 100%;
+            position: fixed; top: 0; width: 275px; height: 100%;
             background: var(--card-bg); z-index: 4001;
-            box-shadow: 0 0 15px rgba(0,0,0,0.15);
+            box-shadow: 0 0 30px rgba(0,0,0,0.7);
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex; flex-direction: column; padding: 18px 14px;
             border-inline-end: 1px solid var(--border-color);
         }
-        html[dir="rtl"] .drawer-sidebar { right: -280px; left: auto; }
+        html[dir="rtl"] .drawer-sidebar { right: -285px; left: auto; }
         html[dir="rtl"] .drawer-sidebar.open { right: 0; }
-        html[dir="ltr"] .drawer-sidebar { left: -280px; right: auto; }
+        html[dir="ltr"] .drawer-sidebar { left: -285px; right: auto; }
         html[dir="ltr"] .drawer-sidebar.open { left: 0; }
 
         .drawer-header {
@@ -106,30 +142,42 @@
         }
         .drawer-shop-info { display: flex; align-items: center; gap: 10px; }
         .drawer-shop-title { font-weight: bold; font-size: 11pt; }
-        .drawer-nav-list { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+        .drawer-nav-list { display: flex; flex-direction: column; gap: 8px; flex: 1; }
 
         .drawer-nav-item {
             display: flex; align-items: center; gap: 12px;
-            background: none; border: none; width: 100%;
-            padding: 12px 14px; border-radius: 10px;
+            background: var(--inner-bg); border: 1px solid var(--border-color); width: 100%;
+            padding: 12px 14px; border-radius: 12px;
             color: var(--text-main); font-size: 10pt; font-weight: bold;
             cursor: pointer; text-align: start;
+            transition: all 0.2s;
         }
         .drawer-nav-item:hover, .drawer-nav-item.active {
-            background-color: var(--bg-color);
+            border-color: var(--accent-blue);
             color: var(--accent-blue);
+            transform: translateX(-3px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
         .drawer-nav-item .nav-icon { font-size: 14pt; }
 
+        /* قائمة البروفايل (محدثة ومثبتة دون تداخل) */
         .google-profile-menu { 
-            display: none; position: absolute; top: 62px;
-            width: 290px; background-color: var(--card-bg); border: 1px solid var(--border-color); 
-            border-radius: 20px; padding: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.18); 
-            z-index: 2500; color: var(--text-main); 
+            display: none !important; 
+            position: absolute !important; 
+            top: 58px !important;
+            width: 290px !important; 
+            background: var(--card-bg) !important; 
+            border: 1px solid var(--border-color) !important; 
+            border-radius: 24px !important; 
+            padding: 18px !important; 
+            box-shadow: 0 20px 45px rgba(0,0,0,0.4) !important; 
+            z-index: 5000 !important; 
+            color: var(--text-main) !important; 
+            backdrop-filter: blur(25px) !important;
         }
-        html[dir="rtl"] .google-profile-menu { right: 12px; left: auto; }
-        html[dir="ltr"] .google-profile-menu { left: 12px; right: auto; }
-        .google-profile-menu.show { display: block; }
+        html[dir="rtl"] .google-profile-menu { right: 8px; left: auto; }
+        html[dir="ltr"] .google-profile-menu { left: 8px; right: auto; }
+        .google-profile-menu.show { display: block !important; animation: slideUp3d 0.2s ease-out; }
         
         .profile-header-box { text-align: center; margin-bottom: 14px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; }
         .avatar-container { position: relative; width: 75px; height: 75px; margin: 0 auto 8px; cursor: pointer; }
@@ -137,6 +185,7 @@
             width: 100%; height: 100%; border-radius: 50%; background-color: #8b5cf6; 
             color: white; font-size: 20pt; display: flex; align-items: center; 
             justify-content: center; font-weight: bold; overflow: hidden; 
+            box-shadow: 0 4px 14px rgba(0,0,0,0.4); border: 2px solid rgba(255,255,255,0.3);
         }
         .profile-shop-title { font-size: 11pt; font-weight: bold; margin-bottom: 2px; }
         .profile-email { color: var(--text-muted); font-size: 8.5pt; word-break: break-all; }
@@ -144,134 +193,279 @@
         .settings-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
         .setting-item-btn {
             display: flex; align-items: center; justify-content: space-between;
-            background: var(--bg-color); border: 1px solid var(--border-color);
-            padding: 9px 12px; border-radius: 10px; cursor: pointer;
+            background: var(--inner-bg); border: 1px solid var(--border-color);
+            padding: 10px 12px; border-radius: 12px; cursor: pointer;
             font-size: 9.5pt; font-weight: 500; color: var(--text-main);
             width: 100%; text-align: inherit;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.15s;
         }
+        .setting-item-btn:active { transform: scale(0.98); }
 
         .dashboard-grid { display: block; width: 100%; margin-bottom: 12px; }
         .grid-row { display: table; width: 100%; table-layout: fixed; border-spacing: 6px; margin-bottom: -6px; }
+        
+        /* البطاقات المجسمة ثلاثية الأبعاد 3D Glass */
         .main-card { 
-            background-color: var(--card-bg); border-radius: 14px; padding: 12px; 
-            border: 1px solid var(--border-color); box-shadow: var(--shadow); 
+            position: relative !important;
+            z-index: 1 !important;
+            background: var(--card-bg); border-radius: 20px; padding: 14px; 
+            border-top: 1.5px solid var(--card-border-top);
+            border-left: 1.5px solid var(--card-border-side);
+            border-right: 1px solid var(--card-border-side);
+            border-bottom: 2px solid var(--card-border-bottom);
+            box-shadow: var(--shadow); 
             margin-bottom: 12px; width: 100%; 
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
-        .dashboard-grid .main-card { display: table-cell; vertical-align: top; height: 105px; }
+        .dashboard-grid .main-card { display: table-cell; vertical-align: top; height: 108px; }
         .card-title { font-size: 10pt; font-weight: bold; margin-bottom: 4px; color: var(--text-main); }
-        .stat-value { font-size: 14pt; font-weight: bold; margin-bottom: 2px; }
+        .stat-value { font-size: 14pt; font-weight: 900; margin-bottom: 2px; letter-spacing: 0.3px; }
         .card-sub-desc { font-size: 8pt; color: var(--text-muted); }
         .chart-wrapper-line { height: 32px; width: 100%; margin-top: auto; }
 
         .add-record-card { 
-            background-color: var(--card-bg); border-radius: 14px; border: 1px solid var(--border-color); 
-            padding: 12px 14px; margin-bottom: 12px; display: flex; align-items: center; 
+            background: var(--card-bg); border-radius: 18px; 
+            border-top: 1.5px solid var(--card-border-top);
+            border-bottom: 2px solid var(--card-border-bottom);
+            border-inline: 1px solid var(--card-border-side);
+            padding: 14px 16px; margin-bottom: 12px; display: flex; align-items: center; 
             justify-content: space-between; cursor: pointer; box-shadow: var(--shadow); 
+            transition: transform 0.15s;
         }
+        .add-record-card:active { transform: scale(0.99); }
         .add-btn-circle { 
-            width: 36px; height: 36px; background-color: #e2e8f0; border-radius: 8px; 
+            width: 38px; height: 38px; background: var(--inner-bg); border-radius: 12px; 
             display: flex; align-items: center; justify-content: center; font-size: 16pt; 
-            font-weight: bold; color: #1e293b; 
+            font-weight: bold; color: var(--accent-blue);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.4);
+            border: 1px solid var(--border-color);
         }
 
-        .search-box-container { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+        .search-box-container { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; width: 100%; }
         #history-container { max-height: 440px; overflow-y: auto; padding-right: 2px; margin-top: 6px; }
         
         .operation-card {
-            border-radius: 14px; padding: 12px; margin-bottom: 10px;
+            border-radius: 16px; padding: 12px; margin-bottom: 10px;
             display: flex; flex-direction: column; gap: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.12);
             border-width: 1.5px; border-style: solid;
+            background: var(--op-card-bg);
+            backdrop-filter: blur(10px);
         }
         .operation-card.worker-entry {
-            background-color: rgba(239, 68, 68, 0.05);
             border-color: rgba(239, 68, 68, 0.4);
-            border-inline-start: 6px solid #ef4444;
+            border-inline-start: 5px solid #ef4444;
         }
         .operation-card.admin-entry {
-            background-color: rgba(37, 99, 235, 0.04);
-            border-color: rgba(37, 99, 235, 0.3);
-            border-inline-start: 6px solid #2563eb;
+            border-color: rgba(56, 189, 248, 0.4);
+            border-inline-start: 5px solid var(--accent-blue);
         }
         
         .op-header { display: flex; justify-content: space-between; align-items: center; }
         .op-title { font-size: 10pt; font-weight: bold; color: var(--text-main); }
         .role-badge { font-size: 8pt; font-weight: bold; padding: 3px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 3px; }
         .role-badge.worker { background-color: #ef4444; color: #ffffff; }
-        .role-badge.admin { background-color: #2563eb; color: #ffffff; }
+        .role-badge.admin { background-color: var(--accent-blue); color: #ffffff; }
 
         .op-body {
             display: flex; justify-content: space-between; align-items: center;
-            background: var(--card-bg); padding: 8px 10px; border-radius: 8px;
+            background: var(--inner-bg); padding: 10px 12px; border-radius: 12px;
             border: 1px solid var(--border-color);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
         }
-        .op-price-tag { font-weight: bold; font-size: 11pt; }
+        .op-price-tag { font-weight: 900 !important; font-size: 11pt; letter-spacing: 0.3px; }
         .op-footer { display: flex; justify-content: space-between; align-items: center; font-size: 8pt; color: var(--text-muted); }
         .op-actions { display: flex; align-items: center; gap: 6px; }
         .btn-action-icon { background: none; border: none; cursor: pointer; font-size: 13pt; padding: 2px 4px; }
 
-        .archive-inline-tabs { display: flex; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 2px; margin-bottom: 8px; }
-        .archive-btn { flex: 1; background: none; border: none; color: var(--text-muted); font-size: 9pt; font-weight: bold; padding: 6px; border-radius: 6px; cursor: pointer; text-align: center; }
-        .archive-btn.active { background-color: var(--accent-green); color: white; }
+        /* إصلاح أرشيف الحسابات */
+        .archive-inline-tabs { 
+            display: flex; background: var(--inner-bg); border-radius: 14px; padding: 4px; margin-bottom: 8px; 
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+            border: 1px solid var(--border-color);
+            position: relative; z-index: 2;
+        }
+        .archive-btn { 
+            flex: 1; background: none; border: none; color: var(--text-muted); font-size: 9pt; font-weight: bold; 
+            padding: 8px 4px; border-radius: 10px; cursor: pointer; text-align: center; 
+            transition: all 0.2s;
+        }
+        .archive-btn.active { 
+            background: var(--card-bg); 
+            color: var(--accent-blue); 
+            border-top: 1px solid var(--card-border-top);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
         .custom-date-container { margin-top: 6px; display: flex; flex-direction: column; gap: 4px; }
-        .custom-date-input { width: 100%; padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border-color); background-color: var(--bg-color); color: var(--text-main); font-size: 9.5pt; font-weight: bold; }
+        .custom-date-input { width: 100%; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border-color); background-color: var(--inner-bg); color: var(--text-main); font-size: 9.5pt; font-weight: bold; box-shadow: inset 0 2px 4px rgba(0,0,0,0.15); }
 
         .report-table { width: 100%; border-collapse: collapse; margin-top: 4px; font-size: 9pt; text-align: center; }
-        .report-table th { color: var(--text-muted); padding: 6px; border-bottom: 1px solid var(--border-color); }
-        .report-table td { padding: 6px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
+        .report-table th { color: var(--text-muted); padding: 8px 6px; border-bottom: 1px solid var(--border-color); }
+        .report-table td { padding: 8px 6px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
         .app-section { display: none; }
-        .app-section.active { display: block; }
+        .app-section.active { display: block; animation: slideUp3d 0.3s ease-out; }
 
-        .stats-bar { display: flex; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px; margin-bottom: 10px; box-shadow: var(--shadow); flex-direction: column; gap: 8px; }
-        .controls-row { display: flex; gap: 6px; margin-bottom: 10px; align-items: center; }
-        .search-input { flex: 1; background-color: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px; border-radius: 8px; outline: none; }
-        .btn-add-main { background-color: var(--accent-blue); color: white; border: none; padding: 0 12px; height: 38px; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .debt-list { display: flex; flex-direction: column; gap: 6px; }
-        .debt-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border-inline-start: 4px solid transparent; }
+        .stats-bar { 
+            display: flex; background: var(--card-bg); border-radius: 18px; padding: 12px 14px; margin-bottom: 10px; 
+            border-top: 1.5px solid var(--card-border-top); border-bottom: 2px solid var(--card-border-bottom);
+            box-shadow: var(--shadow); flex-direction: column; gap: 8px; 
+        }
+        .controls-row { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; }
+        .search-input { 
+            flex: 1; background-color: var(--inner-bg) !important; border: 1px solid var(--border-color) !important; 
+            color: var(--text-main) !important; padding: 11px 14px !important; border-radius: 14px !important; 
+            outline: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.15) !important; margin-bottom: 0 !important;
+        }
+        
+        .debt-list { display: flex; flex-direction: column; gap: 8px; }
+        .debt-card { 
+            background: var(--card-bg); border-radius: 14px; padding: 10px 12px; 
+            display: flex; justify-content: space-between; align-items: center; cursor: pointer; 
+            border-inline-start: 4px solid transparent; 
+            border-top: 1px solid var(--card-border-top); border-bottom: 1.5px solid var(--card-border-bottom);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
         .debt-card.customer-debt { border-inline-start-color: var(--accent-green); }
         .debt-card.shop-debt { border-inline-start-color: var(--danger); }
-        .debt-info-left { display: flex; align-items: center; gap: 6px; }
-        .debt-icon { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11pt; font-weight: bold; }
-        .customer-debt .debt-icon { background-color: rgba(16, 185, 129, 0.1); color: var(--accent-green); }
-        .shop-debt .debt-icon { background-color: rgba(239, 68, 68, 0.1); color: var(--danger); }
-        .debt-remaining { font-size: 10.5pt; font-weight: bold; }
+        .debt-info-left { display: flex; align-items: center; gap: 8px; }
+        .debt-icon { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11pt; font-weight: bold; }
+        .customer-debt .debt-icon { background-color: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
+        .shop-debt .debt-icon { background-color: rgba(239, 68, 68, 0.15); color: var(--danger); }
+        .debt-remaining { font-size: 10.5pt; font-weight: 900 !important; letter-spacing: 0.3px; }
         .customer-debt .debt-remaining { color: var(--accent-green); }
         .shop-debt .debt-remaining { color: var(--danger); }
 
-        .details-summary { display: flex; justify-content: space-between; background: var(--bg-color); padding: 10px; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--border-color); text-align: center; }
+        .details-summary { 
+            display: flex; justify-content: space-between; background: var(--inner-bg); padding: 12px; border-radius: 14px; 
+            margin-bottom: 12px; border: 1px solid var(--border-color); text-align: center; 
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
+        }
         .details-summary div { flex: 1; }
         .details-summary span { display: block; font-size: 7.5pt; color: var(--text-muted); }
-        .details-summary b { font-size: 10.5pt; color: var(--text-main); }
+        .details-summary b { font-size: 10.5pt; color: var(--text-main); font-weight: 900; }
         .history-list { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; max-height: 140px; overflow-y: auto; }
-        .history-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 8px; background: rgba(0,0,0,0.02); border-radius: 6px; font-size: 9pt; }
+        .history-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background: var(--inner-bg); border-radius: 8px; font-size: 9pt; border: 1px solid var(--border-color); }
 
-        .form-group { margin-bottom: 10px; text-align: inherit; }
-        .form-group label { display: block; font-size: 9pt; color: var(--text-muted); margin-bottom: 2px; }
-        .form-control { width: 100%; background-color: var(--bg-color); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px; color: var(--text-main); font-size: 10pt; outline: none; }
-        .btn-submit { width: 100%; background-color: var(--accent-blue); color: white; border: none; padding: 10px; font-size: 10.5pt; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 4px; text-decoration: none; display: inline-block; text-align: center; }
-        .btn-quick { border: none; padding: 6px 10px; border-radius: 6px; font-weight: bold; cursor: pointer; color: white; font-size: 9pt; }
+        .form-group { margin-bottom: 12px; text-align: inherit; }
+        .form-group label { display: block; font-size: 8.5pt; color: var(--text-muted); margin-bottom: 4px; font-weight: 600; }
+        
+        /* حقول الإدخال الغائرة 3D Inset */
+        .form-control, input, select, textarea { 
+            width: 100%; background-color: var(--inner-bg) !important; border: 1px solid var(--border-color) !important; 
+            border-radius: 12px; padding: 11px 13px; color: var(--text-main) !important; font-size: 10pt; outline: none; 
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.15) !important;
+            transition: all 0.2s ease;
+        }
+        .form-control:focus, input:focus, select:focus, textarea:focus {
+            border-color: var(--accent-blue) !important;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 0 0 3px rgba(56, 189, 248, 0.25) !important;
+        }
 
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.55); z-index: 3000; justify-content: center; align-items: center; padding: 12px; }
-        .modal-content { background-color: var(--card-bg); border-radius: 14px; width: 100%; max-width: 400px; padding: 16px; border: 1px solid var(--border-color); max-height: 90vh; overflow-y: auto; color: var(--text-main); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 6px; }
+        /* أزرار 3D المجسمة مع تأثير الضغط الحقيقي */
+        .btn-submit { 
+            width: 100%; background: linear-gradient(180deg, #10b981 0%, #059669 50%, #047857 100%); 
+            color: white; border: none; padding: 13px; font-size: 10.5pt; font-weight: 800; border-radius: 14px; 
+            cursor: pointer; margin-top: 4px; text-decoration: none; display: inline-block; text-align: center; 
+            border-top: 1.5px solid rgba(255, 255, 255, 0.35);
+            box-shadow: 0 5px 0 #064e3b, 0 8px 16px rgba(0, 0, 0, 0.25);
+            transition: all 0.1s ease;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        .btn-submit:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #064e3b, 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
 
-        .auth-container { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 18px; max-width: 360px; margin: 20px auto; text-align: center; box-shadow: var(--shadow); }
-        .auth-tabs { display: flex; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); }
-        .auth-tab { flex: 1; padding: 6px 2px; background: none; border: none; color: var(--text-muted); font-weight: bold; cursor: pointer; font-size: 9pt; }
-        .auth-tab.active { color: var(--accent-blue); border-bottom: 3px solid var(--accent-blue); }
+        .btn-add-main { 
+            background: linear-gradient(180deg, #0284c7 0%, #0369a1 50%, #075985 100%); 
+            color: white; border: none; padding: 0 14px; height: 42px; border-radius: 12px; font-weight: bold; 
+            cursor: pointer; display: flex; align-items: center; justify-content: center; 
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 0 #0c4a6e, 0 6px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.1s ease;
+        }
+        .btn-add-main:active { transform: translateY(3px); box-shadow: 0 1px 0 #0c4a6e; }
+
+        .btn-quick { 
+            border: none; padding: 8px 12px; border-radius: 10px; font-weight: bold; cursor: pointer; color: white; font-size: 9pt; 
+            border-top: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 3px 0 rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.1s ease;
+        }
+        .btn-quick:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.3); }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); z-index: 3000; justify-content: center; align-items: center; padding: 12px; backdrop-filter: blur(10px); }
+        .modal-content { 
+            background: var(--card-bg); 
+            border-radius: 24px; width: 100%; max-width: 400px; padding: 20px; 
+            border-top: 1.5px solid var(--card-border-top);
+            border-bottom: 2px solid var(--card-border-bottom);
+            border-inline: 1px solid var(--card-border-side);
+            box-shadow: var(--shadow);
+            max-height: 90vh; overflow-y: auto; color: var(--text-main); 
+            animation: slideUp3d 0.25s ease-out;
+        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
+
+        /* شاشة الدخول الفاخرة ثلاثية الأبعاد بدون تاج */
+        .auth-container { 
+            background: var(--card-bg); 
+            border-top: 1.5px solid var(--card-border-top);
+            border-left: 1.5px solid var(--card-border-side);
+            border-right: 1px solid var(--card-border-side);
+            border-bottom: 2px solid var(--card-border-bottom);
+            border-radius: 28px; padding: 30px 22px; max-width: 385px; margin: 30px auto; 
+            text-align: center; box-shadow: var(--shadow); 
+            backdrop-filter: blur(20px);
+            animation: slideUp3d 0.35s ease-out;
+        }
+
+        .auth-logo-box-3d {
+            width: 80px; height: 80px; margin: 0 auto 14px; border-radius: 24px;
+            background: var(--card-bg);
+            display: flex; align-items: center; justify-content: center; padding: 3px;
+            border-top: 1.5px solid var(--card-border-top);
+            border-bottom: 2px solid var(--card-border-bottom);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .auth-logo-box-3d img { width: 100%; height: 100%; object-fit: cover; border-radius: 20px; }
+
+        .auth-tabs { 
+            display: flex; background: var(--inner-bg); padding: 5px; border-radius: 16px; margin-bottom: 22px; gap: 5px; 
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+        }
+        .auth-tab { 
+            flex: 1; padding: 10px 4px; background: none; border: none; color: var(--text-muted); 
+            font-weight: 700; cursor: pointer; font-size: 9.5pt; border-radius: 12px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .auth-tab.active { 
+            background: var(--card-bg); 
+            color: var(--accent-blue); 
+            border-top: 1px solid var(--card-border-top);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transform: translateY(-1px);
+        }
         .auth-screen { display: none; }
-        .auth-screen.active { display: block; }
+        .auth-screen.active { display: block; animation: slideUp3d 0.25s ease-out; }
 
-        .note-card { background-color: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px; margin-bottom: 6px; cursor: pointer; }
+        .note-card { 
+            background: var(--inner-bg); border: 1px solid var(--border-color); 
+            border-radius: 14px; padding: 12px; margin-bottom: 8px; cursor: pointer; 
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
+        }
         body.worker-mode .admin-only { display: none !important; }
 
         .cart-table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 8.5pt; }
-        .cart-table th, .cart-table td { padding: 4px; border-bottom: 1px solid var(--border-color); text-align: inherit; }
+        .cart-table th, .cart-table td { padding: 6px 4px; border-bottom: 1px solid var(--border-color); text-align: inherit; }
 
         .ticket-box { 
             border: 1px dashed #94a3b8; 
             padding: 12px; 
-            border-radius: 8px; 
+            border-radius: 10px; 
             background: #fff; 
             color: #0f172a; 
             font-size: 9pt; 
@@ -279,6 +473,11 @@
             margin: 0 auto;
         }
         .ticket-divider { border-top: 1px dashed #64748b; margin: 6px 0; }
+
+        @keyframes slideUp3d {
+            from { opacity: 0; transform: translateY(12px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
 
         /* تنسيقات الطباعة المباشرة لآيفون وأندرويد */
         @media print {
@@ -376,7 +575,7 @@
     <div class="app-header">
         <div class="header-left">
             <button class="icon-btn" onclick="window.openDrawer()" title="القائمة">☰</button>
-            <button class="icon-btn" onclick="window.toggleTheme()" id="theme-toggle-btn">🌙</button>
+            <button class="icon-btn" onclick="window.toggleTheme()" id="theme-toggle-btn">☀️</button>
         </div>
         <div class="header-title" id="main-header-title">إدارة المتجر</div>
         <div class="header-icons">
@@ -386,7 +585,7 @@
             </div>
         </div>
 
-        <!-- قائمة إعدادات البروفايل -->
+        <!-- قائمة إعدادات البروفايل (منبثقة دون تداخل) -->
         <div id="google-profile-menu" class="google-profile-menu">
             <div class="profile-header-box">
                 <div class="avatar-container admin-only" onclick="document.getElementById('avatar-file-input').click()" title="تغيير الصورة">
@@ -417,26 +616,32 @@
                 </button>
             </div>
 
-            <button type="button" class="btn-submit" style="background-color: rgba(239,68,68,0.1); color: var(--danger); margin-top: 4px;" onclick="window.handleLogout()">
+            <button type="button" class="btn-submit" style="background: linear-gradient(180deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%); box-shadow: 0 5px 0 #7f1d1d; margin-top: 4px;" onclick="window.handleLogout()">
                 <span data-i18n="logout">تسجيل الخروج</span> 🚪
             </button>
         </div>
     </div>
 
-    <!-- شاشة الدخول -->
+    <!-- شاشة الدخول الفاخرة 3D (بدون تاج) -->
     <div id="auth-flow-container" class="auth-container">
+        <div class="auth-logo-box-3d">
+            <img src="./logo.png" alt="Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+        </div>
+        <h2 style="font-size: 15pt; font-weight: 800; color: var(--text-main); margin-bottom: 2px;">ShopLedger</h2>
+        <p style="font-size: 8.5pt; color: var(--text-muted); margin-bottom: 18px;">منصة إدارة ومبيعات المتجر</p>
+
         <div class="auth-tabs">
-            <button id="tab-login" class="auth-tab active" onclick="window.switchAuthTab('login')">دخول المدير</button>
+            <button id="tab-login" class="auth-tab active" onclick="window.switchAuthTab('login')">المدير</button>
             <button id="tab-register" class="auth-tab" onclick="window.switchAuthTab('register')">حساب جديد</button>
-            <button id="tab-worker" class="auth-tab" onclick="window.switchAuthTab('worker')" style="color:var(--accent-purple);">دخول العامل</button>
+            <button id="tab-worker" class="auth-tab" onclick="window.switchAuthTab('worker')">العامل</button>
         </div>
 
         <div id="screen-login" class="auth-screen active">
             <form id="login-form">
                 <div class="form-group"><label>الإيميل:</label><input type="email" id="login-email" class="form-control" required placeholder="name@gmail.com"></div>
                 <div class="form-group"><label>كلمة السر:</label><input type="password" id="login-password" class="form-control" required placeholder="••••••••"></div>
-                <div style="text-align: inherit; margin-bottom: 10px;">
-                    <a href="javascript:void(0)" onclick="window.openModal('reset-password-modal')" style="font-size: 8.5pt; color: var(--accent-blue); text-decoration: none;">نسيت كلمة السر؟</a>
+                <div style="text-align: inherit; margin-bottom: 14px;">
+                    <a href="javascript:void(0)" onclick="window.openModal('reset-password-modal')" style="font-size: 8.5pt; color: var(--accent-blue); text-decoration: none; font-weight: 600;">نسيت كلمة السر؟</a>
                 </div>
                 <button type="submit" class="btn-submit" onclick="window.handleLogin(event)">دخول كمدير</button>
             </form>
@@ -448,15 +653,17 @@
                 <div class="form-group"><label>البريد الإلكتروني:</label><input type="email" id="reg-email" class="form-control" required></div>
                 <div class="form-group"><label>كلمة السر:</label><input type="password" id="reg-password" class="form-control" required></div>
                 <div class="form-group"><label>تأكيد كلمة السر:</label><input type="password" id="reg-password-confirm" class="form-control" required></div>
-                <button type="submit" class="btn-submit" style="background-color: var(--accent-green);" onclick="window.handleRegister(event)">إنشاء حساب</button>
+                <button type="submit" class="btn-submit" onclick="window.handleRegister(event)">إنشاء حساب</button>
             </form>
         </div>
 
         <div id="screen-worker" class="auth-screen">
             <form id="worker-login-form">
-                <p style="font-size: 8.5pt; color: var(--text-muted); text-align: center; margin-bottom: 10px;">أدخل كود الربط الذي منحه لك صاحب المتجر.</p>
-                <div class="form-group"><label>كود ربط المحل:</label><input type="text" id="worker-code-input" class="form-control" required placeholder="WKR-123456"></div>
-                <button type="button" class="btn-submit" style="background-color: var(--accent-purple);" onclick="window.handleWorkerLogin(event)">دخول العامل 👷‍♂️</button>
+                <div style="background: rgba(139, 92, 246, 0.15); border: 1px dashed rgba(167, 139, 250, 0.4); border-radius: 12px; padding: 12px; font-size: 8.5pt; color: var(--accent-purple); text-align: center; margin-bottom: 14px;">
+                    أدخل كود الربط الذي منحه لك صاحب المتجر لبدء العمل فوراً.
+                </div>
+                <div class="form-group"><label>كود ربط المحل:</label><input type="text" id="worker-code-input" class="form-control" required placeholder="WKR-123456" style="text-align: center; font-weight: bold; letter-spacing: 2px;"></div>
+                <button type="button" class="btn-submit" style="background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%); box-shadow: 0 5px 0 #4c1d95;" onclick="window.handleWorkerLogin(event)">دخول العامل 👷‍♂️</button>
             </form>
         </div>
     </div>
@@ -466,14 +673,14 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3>🔑 استعادة كلمة السر</h3>
-                <button style="background:none; border:none; font-size:16pt; cursor:pointer;" onclick="window.closeModal('reset-password-modal')">×</button>
+                <button style="background:none; border:none; font-size:16pt; cursor:pointer; color:var(--text-main);" onclick="window.closeModal('reset-password-modal')">×</button>
             </div>
             <div class="form-group"><input type="email" id="reset-email-input" class="form-control" placeholder="name@gmail.com"></div>
             <button class="btn-submit" onclick="window.handlePasswordReset()">إرسال الرابط 📩</button>
         </div>
     </div>
 
-    <!-- التطبيق الأساسي (يظهر فور انتهاء الفحص) -->
+    <!-- التطبيق الأساسي -->
     <div id="main-app-content">
 
         <!-- 1. قسم المتجر (المبيعات) -->
@@ -490,7 +697,7 @@
                 <div class="card-title" data-i18n="search_filter">🔍 البحث والتصفية</div>
                 <div class="search-box-container">
                     <input type="text" id="global-search-input" class="form-control" placeholder="ابحث باسم المنتج، العميل..." oninput="window.debounceSearch()">
-                    <button id="filter-worker-btn" class="btn-quick admin-only" style="background-color: var(--accent-purple); width: 100%;" onclick="window.toggleWorkerFilter()">👷‍♂️ عمليات العامل فقط</button>
+                    <button id="filter-worker-btn" class="btn-quick admin-only" style="background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%); width: 100%; padding: 10px;" onclick="window.toggleWorkerFilter()">👷‍♂️ عمليات العامل فقط</button>
                 </div>
             </div>
 
@@ -498,7 +705,7 @@
                 <div class="card-title" data-i18n="history_title">📝 سجل العمليات</div>
                 <div id="history-container"></div>
                 <div style="text-align: center; margin-top: 8px;">
-                    <button id="load-more-btn" class="btn-quick" style="background: var(--card-bg); color: var(--accent-blue); border: 1px solid var(--border-color); width: 100%; display: none;" onclick="window.loadMoreRecords()">عرض المزيد ⬇️</button>
+                    <button id="load-more-btn" class="btn-quick" style="background: var(--card-bg); color: var(--accent-blue); border: 1px solid var(--border-color); width: 100%; display: none; padding: 10px;" onclick="window.loadMoreRecords()">عرض المزيد ⬇️</button>
                 </div>
             </div>
 
@@ -519,13 +726,13 @@
                 </div>
             </div>
 
-            <div class="main-card admin-only" style="border: 1.5px dashed var(--accent-blue); background: rgba(37,99,235,0.02);">
+            <div class="main-card admin-only" style="border: 1.5px dashed var(--accent-blue); background: rgba(56, 189, 248, 0.05);">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
                         <div style="font-weight: bold; font-size: 10.5pt; color: var(--accent-blue);" data-i18n="report_card_title">📊 التقرير المالي الشامل</div>
                         <div style="font-size: 8pt; color: var(--text-muted); margin-top: 2px;" data-i18n="report_card_sub">أيام العمل، العطل، الأرباح والمصاريف</div>
                     </div>
-                    <button type="button" class="btn-quick" style="background: var(--accent-blue); padding: 8px 12px;" onclick="window.generateFullReport()" data-i18n="btn_show_report">📄 عرض التقرير</button>
+                    <button type="button" class="btn-add-main" style="height: 38px; padding: 0 12px;" onclick="window.generateFullReport()" data-i18n="btn_show_report">📄 عرض التقرير</button>
                 </div>
             </div>
 
@@ -578,7 +785,7 @@
                 <select id="stock-cat-filter" class="search-input" onchange="window.filterStockByCategory(this.value)">
                     <option value="ALL">📦 كل الأقسام</option>
                 </select>
-                <button type="button" class="btn-quick" style="background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-main); font-size: 13pt; height: 38px; padding: 0 10px;" onclick="window.openManageCategoriesModal()" title="إدارة الأقسام">⚙️</button>
+                <button type="button" class="btn-quick" style="background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-main); font-size: 13pt; height: 42px; padding: 0 12px; border-radius: 12px;" onclick="window.openManageCategoriesModal()" title="إدارة الأقسام">⚙️</button>
                 <button class="btn-add-main" onclick="window.openNewProductModalDirectly()" data-i18n="btn_new_product">➕ سلعة جديدة</button>
             </div>
 
@@ -595,7 +802,7 @@
 
             <div class="controls-row">
                 <input type="text" id="expenses-search-input" class="search-input" placeholder="🔍 بحث في المصاريف..." oninput="window.debounceExpensesSearch()">
-                <button class="btn-add-main" style="background-color: var(--danger);" onclick="window.openAddExpenseModal()" data-i18n="btn_add_expense">➕ تسجيل مصروف</button>
+                <button class="btn-add-main" style="background: linear-gradient(180deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%); box-shadow: 0 4px 0 #7f1d1d;" onclick="window.openAddExpenseModal()" data-i18n="btn_add_expense">➕ تسجيل مصروف</button>
             </div>
 
             <div id="expenses-list-container" style="display: flex; flex-direction: column; gap: 6px;"></div>
@@ -624,7 +831,7 @@
                     <h3 style="font-size:11pt; font-weight:bold;" data-i18n="add_note_title">تدوين ملاحظة</h3>
                     <p style="font-size:8.5pt; color:var(--text-muted);" data-i18n="add_note_sub">سجل الأفكار والنواقص</p>
                 </div>
-                <div class="add-btn-circle" style="background:#e0e7ff; color:var(--accent-purple);">📝</div>
+                <div class="add-btn-circle" style="color:var(--accent-purple);">📝</div>
             </div>
             <div class="main-card">
                 <div id="notes-container"></div>
@@ -647,9 +854,9 @@
                     <input type="text" id="phone-buyer-name" class="form-control">
                 </div>
 
-                <div style="border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; background: var(--bg-color); margin-bottom: 8px;">
-                    <div style="margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-                        <input type="checkbox" id="is-manual-entry" onchange="window.toggleManualEntry(this.checked)">
+                <div style="border: 1px solid var(--border-color); border-radius: 14px; padding: 12px; background: var(--inner-bg); margin-bottom: 10px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);">
+                    <div style="margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                        <input type="checkbox" id="is-manual-entry" onchange="window.toggleManualEntry(this.checked)" style="width: auto !important; margin: 0 !important;">
                         <label for="is-manual-entry" style="margin:0; font-weight:bold; cursor:pointer;" data-i18n="lbl_manual_entry">⚡ كتابة يدوية سريعة</label>
                     </div>
 
@@ -660,7 +867,7 @@
                         </div>
                         <div class="form-group">
                             <label data-i18n="lbl_product">المنتج أو السلعة:</label>
-                            <input type="text" id="product-search" class="form-control" placeholder="🔍 بحث سريع..." style="margin-bottom: 3px;" oninput="window.filterProducts(this.value)">
+                            <input type="text" id="product-search" class="form-control" placeholder="🔍 بحث سريع..." style="margin-bottom: 6px;" oninput="window.filterProducts(this.value)">
                             <select id="product-select" class="form-control" onchange="window.handleProductChange(this.value)"></select>
                         </div>
                     </div>
@@ -683,7 +890,7 @@
                         </div>
                     </div>
 
-                    <button type="button" class="btn-quick" style="width: 100%; background: var(--accent-purple); padding: 8px;" onclick="window.addToCart()" data-i18n="btn_add_to_cart">➕ أضف المنتج إلى السلة</button>
+                    <button type="button" class="btn-quick" style="width: 100%; background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%); padding: 10px; border-radius: 12px;" onclick="window.addToCart()" data-i18n="btn_add_to_cart">➕ أضف المنتج إلى السلة</button>
                 </div>
 
                 <div id="cart-container" style="display: none; margin-bottom: 8px;">
@@ -704,10 +911,10 @@
                 </div>
 
                 <div id="debt-checkbox-wrapper" style="margin-bottom:8px; display:flex; align-items:center; gap:6px;">
-                    <input type="checkbox" id="is-debt" onchange="window.toggleDebtFields(this.checked)">
+                    <input type="checkbox" id="is-debt" onchange="window.toggleDebtFields(this.checked)" style="width: auto !important; margin: 0 !important;">
                     <label for="is-debt" style="margin:0; color:var(--danger); font-weight:bold; cursor:pointer;" data-i18n="lbl_is_debt">العملية بالدين (كريدي)</label>
                 </div>
-                <div id="debt-sales-fields" style="display:none; background:rgba(239,68,68,0.05); padding:6px; border-radius:6px; margin-bottom:8px;">
+                <div id="debt-sales-fields" style="display:none; background:var(--inner-bg); padding:10px; border-radius:12px; margin-bottom:10px; border:1px solid rgba(239,68,68,0.3);">
                     <div class="form-group">
                         <label data-i18n="lbl_debt_customer">اسم العميل للدين:</label>
                         <input type="text" id="debt-customer-name" class="form-control" list="debt-names-list">
@@ -718,9 +925,9 @@
                     </div>
                 </div>
 
-                <div style="display: flex; gap: 6px; margin-top: 4px;">
-                    <button type="submit" class="btn-submit" id="sale-submit-btn" style="background-color: var(--accent-green); flex: 1;" data-i18n="btn_save">✅ حفظ</button>
-                    <button type="button" class="btn-submit" id="sale-print-btn" style="background-color: var(--accent-blue); flex: 1;" onclick="window.submitCartSale(event, true)" data-i18n="btn_save_ticket">🧾 حفظ وتيكيت</button>
+                <div style="display: flex; gap: 8px; margin-top: 6px;">
+                    <button type="submit" class="btn-submit" id="sale-submit-btn" style="flex: 1;" data-i18n="btn_save">✅ حفظ</button>
+                    <button type="button" class="btn-submit" id="sale-print-btn" style="background: linear-gradient(180deg, #0284c7 0%, #0369a1 50%, #075985 100%); box-shadow: 0 5px 0 #0c4a6e; flex: 1;" onclick="window.submitCartSale(event, true)" data-i18n="btn_save_ticket">🧾 حفظ وتيكيت</button>
                 </div>
             </form>
         </div>
@@ -733,8 +940,8 @@
                 <h3 data-i18n="manage_cats_title">⚙️ إدارة وتعديل الأقسام</h3>
                 <span style="cursor:pointer; font-size:16pt;" onclick="window.closeModal('modal-manage-categories')">×</span>
             </div>
-            <div style="display:flex; gap:4px; margin-bottom:10px;">
-                <input type="text" id="quick-add-cat-input" class="form-control" placeholder="اسم قسم جديد...">
+            <div style="display:flex; gap:6px; margin-bottom:10px;">
+                <input type="text" id="quick-add-cat-input" class="form-control" placeholder="اسم قسم جديد..." style="margin-bottom:0 !important;">
                 <button type="button" class="btn-add-main" onclick="window.addNewCategoryFromModal()">➕</button>
             </div>
             <div id="categories-manage-list" style="display:flex; flex-direction:column; gap:6px; max-height:260px; overflow-y:auto;"></div>
@@ -743,15 +950,15 @@
 
     <!-- نافذة عرض التقرير المالي الشامل -->
     <div id="modal-report-view" class="modal">
-        <div class="modal-content" style="max-width: 380px; padding: 14px;">
+        <div class="modal-content" style="max-width: 380px; padding: 16px;">
             <div class="modal-header">
                 <h3 data-i18n="report_dialog_title">📊 التقرير المالي للنشاط</h3>
                 <span style="cursor:pointer; font-size:16pt;" onclick="window.closeModal('modal-report-view')">×</span>
             </div>
             <div id="report-printable-area"></div>
-            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 12px;">
-                <button type="button" class="btn-submit" id="btn-print-report" style="background: var(--accent-blue);" onclick="window.printReportDirectly()" data-i18n="btn_print_report">🖨️ طباعة التقرير</button>
-                <button type="button" class="btn-submit" style="background: var(--border-color); color: var(--text-main);" onclick="window.closeModal('modal-report-view')" data-i18n="btn_close">إغلاق ✖</button>
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 14px;">
+                <button type="button" class="btn-submit" id="btn-print-report" style="background: linear-gradient(180deg, #0284c7 0%, #0369a1 100%); box-shadow: 0 5px 0 #0c4a6e;" onclick="window.printReportDirectly()" data-i18n="btn_print_report">🖨️ طباعة التقرير</button>
+                <button type="button" class="btn-submit" style="background: var(--inner-bg); color: var(--text-main); box-shadow: 0 4px 0 rgba(0,0,0,0.2);" onclick="window.closeModal('modal-report-view')" data-i18n="btn_close">إغلاق ✖</button>
             </div>
         </div>
     </div>
@@ -777,7 +984,7 @@
                     <label data-i18n="lbl_note">ملاحظة توضيحية:</label>
                     <input type="text" id="expense-note-input" class="form-control" placeholder="اختياري...">
                 </div>
-                <button type="submit" class="btn-submit" style="background-color: var(--danger);" data-i18n="btn_save_expense">💾 حفظ المصروف</button>
+                <button type="submit" class="btn-submit" style="background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%); box-shadow: 0 5px 0 #7f1d1d;" data-i18n="btn_save_expense">💾 حفظ المصروف</button>
             </form>
         </div>
     </div>
@@ -794,9 +1001,9 @@
 
             <div class="form-group">
                 <label data-i18n="lbl_category">القسم / التصنيف:</label>
-                <div style="display:flex; gap:4px;">
+                <div style="display:flex; gap:6px;">
                     <select id="modal-product-cat-select" class="form-control" style="flex:1;"></select>
-                    <button type="button" class="btn-quick" style="background:var(--accent-purple);" onclick="window.openNewCategoryPrompt()">➕ قسم</button>
+                    <button type="button" class="btn-quick" style="background:linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%); border-radius:12px; height:42px; padding:0 12px;" onclick="window.openNewCategoryPrompt()">➕ قسم</button>
                 </div>
             </div>
             <div class="form-group"><label data-i18n="lbl_product_name">اسم المنتج:</label><input type="text" id="new-prod-input" class="form-control" required></div>
@@ -817,15 +1024,14 @@
                 <span style="cursor:pointer; font-size:16pt;" onclick="window.closeTicketModal()">×</span>
             </div>
             <div id="ticket-modal-content"></div>
-            <!-- أزرار التيكيت -->
-            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 12px;">
-                <button type="button" class="btn-submit" id="btn-print-action" style="background: var(--accent-blue);" onclick="window.printTicketDirectly()">
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 14px;">
+                <button type="button" class="btn-submit" id="btn-print-action" style="background: linear-gradient(180deg, #0284c7 0%, #0369a1 100%); box-shadow: 0 5px 0 #0c4a6e;" onclick="window.printTicketDirectly()">
                     🖨️ طباعة التيكيت
                 </button>
-                <button type="button" class="btn-submit" id="btn-share-whatsapp" style="background: var(--accent-green); color: white;" onclick="window.shareTicketWhatsapp()">
+                <button type="button" class="btn-submit" id="btn-share-whatsapp" onclick="window.shareTicketWhatsapp()">
                     📲 إرسال واتساب (صورة)
                 </button>
-                <button type="button" class="btn-submit" style="background: var(--border-color); color: var(--text-main);" onclick="window.closeTicketModal()">
+                <button type="button" class="btn-submit" style="background: var(--inner-bg); color: var(--text-main); box-shadow: 0 4px 0 rgba(0,0,0,0.2);" onclick="window.closeTicketModal()">
                     إغلاق ✖
                 </button>
             </div>
@@ -874,8 +1080,8 @@
         <div class="modal-content">
             <div class="modal-header"><h3 data-i18n="worker_code_title">🔑 توليد كود العامل</h3><span style="cursor:pointer;" onclick="window.closeModal('worker-code-modal')">×</span></div>
             <p style="font-size:8.5pt; color:var(--text-muted); margin-bottom:10px;" data-i18n="worker_code_desc">كود صالح للربط لمرة واحدة دون إعطاء كلمة السر.</p>
-            <button class="btn-submit" style="background:var(--accent-purple);" onclick="window.generateWorkerCode()" data-i18n="btn_generate_code">توليد الكود الآن ⚡</button>
-            <div id="worker-code-display" style="display:none; margin-top:10px; padding:8px; background:rgba(168,85,247,0.1); border:1px dashed var(--accent-purple); font-weight:bold; font-size:13pt; text-align:center; user-select:all;"></div>
+            <button class="btn-submit" style="background:linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%); box-shadow: 0 5px 0 #4c1d95;" onclick="window.generateWorkerCode()" data-i18n="btn_generate_code">توليد الكود الآن ⚡</button>
+            <div id="worker-code-display" style="display:none; margin-top:12px; padding:10px; background:rgba(168,85,247,0.15); border:1px dashed var(--accent-purple); font-weight:bold; font-size:13pt; text-align:center; user-select:all; border-radius:12px;"></div>
         </div>
     </div>
 
@@ -891,17 +1097,17 @@
             </p>
 
             <div style="display:flex; flex-direction:column; gap:10px;">
-                <button type="button" class="btn-submit" style="background:var(--accent-blue);" onclick="window.exportBackupFile()" data-i18n="btn_export_backup">
+                <button type="button" class="btn-submit" style="background:linear-gradient(180deg, #0284c7 0%, #0369a1 100%); box-shadow: 0 5px 0 #0c4a6e;" onclick="window.exportBackupFile()" data-i18n="btn_export_backup">
                     📥 تصدير وحفظ نسخة احتياطية
                 </button>
 
-                <button type="button" class="btn-submit" style="background:var(--accent-purple);" onclick="document.getElementById('backup-file-input').click()" data-i18n="btn_import_backup">
+                <button type="button" class="btn-submit" style="background:linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%); box-shadow: 0 5px 0 #4c1d95;" onclick="document.getElementById('backup-file-input').click()" data-i18n="btn_import_backup">
                     📤 استرجاع نسخة سابقة (رفع ملف)
                 </button>
                 <input type="file" id="backup-file-input" accept=".json" style="display:none;" onchange="window.importBackupFile(event)">
             </div>
 
-            <button type="button" class="btn-submit" style="background:var(--border-color); color:var(--text-main); margin-top:14px;" onclick="window.closeModal('modal-backup')" data-i18n="btn_close">
+            <button type="button" class="btn-submit" style="background:var(--inner-bg); color:var(--text-main); box-shadow: 0 4px 0 rgba(0,0,0,0.2); margin-top:14px;" onclick="window.closeModal('modal-backup')" data-i18n="btn_close">
                 إغلاق ✖
             </button>
         </div>
@@ -939,12 +1145,12 @@
                 <div><span data-i18n="lbl_rem_sum">المتبقي</span><b id="details-remaining" style="color:var(--danger);">0</b></div>
             </div>
             <div class="history-list" id="debt-history-container"></div>
-            <div style="display:flex; flex-direction:column; gap:6px; background:var(--bg-color); padding:8px; border-radius:6px; border:1px solid var(--border-color);">
-                <div style="display:flex; gap:4px;">
-                    <input type="number" step="any" id="quick-action-amount" class="form-control" placeholder="المبلغ..." style="flex:1;">
-                    <input type="text" id="quick-action-note" class="form-control" placeholder="ملاحظة..." style="flex:2;">
+            <div style="display:flex; flex-direction:column; gap:6px; background:var(--inner-bg); padding:10px; border-radius:12px; border:1px solid var(--border-color); box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);">
+                <div style="display:flex; gap:6px;">
+                    <input type="number" step="any" id="quick-action-amount" class="form-control" placeholder="المبلغ..." style="flex:1; margin-bottom:0 !important;">
+                    <input type="text" id="quick-action-note" class="form-control" placeholder="ملاحظة..." style="flex:2; margin-bottom:0 !important;">
                 </div>
-                <div style="display:flex; gap:4px;">
+                <div style="display:flex; gap:6px; margin-top: 4px;">
                     <button type="button" class="btn-quick" style="flex:1; background:var(--accent-green);" onclick="window.addQuickTransaction('pay')">🟢 خلاص</button>
                     <button type="button" class="btn-quick" style="flex:1; background:var(--accent-orange);" onclick="window.addQuickTransaction('borrow')">🔴 كريدي</button>
                 </div>
@@ -958,7 +1164,7 @@
             <form onsubmit="window.saveNote(event)">
                 <div class="form-group"><label data-i18n="lbl_title">العنوان:</label><input type="text" id="note-title" class="form-control" required></div>
                 <div class="form-group"><label data-i18n="lbl_details">التفاصيل:</label><textarea id="note-content" class="form-control" required></textarea></div>
-                <button type="submit" class="btn-submit" style="background-color:var(--accent-purple)" data-i18n="btn_save_note">حفظ الملاحظة</button>
+                <button type="submit" class="btn-submit" style="background:linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%); box-shadow: 0 5px 0 #4c1d95;" data-i18n="btn_save_note">حفظ الملاحظة</button>
             </form>
         </div>
     </div>
@@ -1261,7 +1467,7 @@
                 btn_save_ticket: "🧾 Save & Ticket",
                 manage_cats_title: "⚙️ Categories Management",
                 report_dialog_title: "📊 Activity Financial Report",
-                btn_print_report: "🖨️️ Print Report",
+                btn_print_report: "🖨 Print Report",
                 btn_close: "Close ✖",
                 lbl_amount: "Amount:",
                 lbl_expense_type: "Expense type:",
@@ -1363,14 +1569,19 @@
             if (section === 'notes') window.updateNotesUI();
         };
 
+        // تبديل الوضع الليلي والنهاري بشكل فوري وفعلي
         window.toggleTheme = function() {
-            const current = document.documentElement.getAttribute('data-theme');
+            const root = document.getElementById('main-html-root') || document.documentElement;
+            const current = root.getAttribute('data-theme') || 'light';
             const target = current === 'dark' ? 'light' : 'dark';
+            
+            root.setAttribute('data-theme', target);
             document.documentElement.setAttribute('data-theme', target);
             localStorage.setItem('theme', target);
-            document.getElementById('theme-toggle-btn').innerText = target === 'dark' ? '☀️' : '🌙';
+            
+            const btn = document.getElementById('theme-toggle-btn');
+            if (btn) btn.innerText = target === 'dark' ? '☀️' : '🌙';
         };
-        document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
 
         window.toggleGoogleMenu = function() {
             document.getElementById('google-profile-menu').classList.toggle('show');
@@ -1558,7 +1769,7 @@
 
             window.customCategories.forEach((cat, idx) => {
                 listContainer.innerHTML += `
-                    <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-color); padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border-color);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: var(--inner-bg); padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);">
                         <b style="font-size: 9.5pt;">📦 ${cat}</b>
                         <div style="display: flex; gap: 4px;">
                             <button class="btn-action-icon" onclick="window.renameCategoryPrompt(${idx})" title="تعديل الاسم">✏️</button>
@@ -1712,12 +1923,12 @@
             window.openModal('modal-report-view');
         };
 
-        // 1. زر الطباعة المباشرة لجميع الهواتف والطابعات
+        // زر الطباعة المباشرة لجميع الهواتف
         window.printTicketDirectly = function() {
             window.print();
         };
 
-        // 2. زر الواتساب ومشاركة التيكيت كصورة PNG حقيقية
+        // زر الواتساب ومشاركة التيكيت كصورة PNG
         window.shareTicketWhatsapp = async function() {
             const btn = document.getElementById('btn-share-whatsapp');
             const target = document.getElementById('ticket-printable-node') || document.getElementById('ticket-modal-content');
@@ -1762,9 +1973,7 @@
                                 title: window.shopName,
                                 text: `وصل شراء - ${window.shopName}`
                             });
-                        } catch (err) {
-                            // إلغاء المشاركة
-                        }
+                        } catch (err) {}
                     } else {
                         const link = document.createElement('a');
                         link.download = fileName;
@@ -1783,7 +1992,6 @@
             }
         };
 
-        // طباعة التقرير المالي
         window.printReportDirectly = function() {
             window.print();
         };
@@ -1872,7 +2080,7 @@
                             </div>
                         </div>
                         <div style="display:flex; align-items:center; gap:8px;">
-                            <b style="color:var(--danger); font-size:10.5pt;">${exp.amount} ${window.currency}</b>
+                            <b style="color:var(--danger); font-size:10.5pt; font-weight:900;">${exp.amount} ${window.currency}</b>
                             <button class="btn-action-icon" onclick="window.openEditExpenseModal('${exp.id}')">✏️</button>
                             <button class="btn-action-icon" style="color:var(--danger)" onclick="window.deleteExpense('${exp.id}')">❌</button>
                         </div>
@@ -2021,7 +2229,7 @@
                                 </div>
                             </div>
                             <div style="display:flex; align-items:center; gap:8px;">
-                                <div style="display:flex; align-items:center; gap:4px; background:var(--bg-color); padding:3px 6px; border-radius:6px; border:1px solid var(--border-color);">
+                                <div style="display:flex; align-items:center; gap:4px; background:var(--inner-bg); padding:4px 8px; border-radius:10px; border:1px solid var(--border-color); box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);">
                                     <button class="btn-action-icon" style="color:var(--danger);" onclick="window.changeStockQtyQuick('${cat}', ${idx}, -1)">➖</button>
                                     <b style="font-size:10.5pt; color:${qty > 0 ? 'var(--accent-green)' : 'var(--danger)'}; min-width:24px; text-align:center;">${qty}</b>
                                     <button class="btn-action-icon" style="color:var(--accent-green);" onclick="window.changeStockQtyQuick('${cat}', ${idx}, 1)">➕</button>
@@ -2201,14 +2409,14 @@
                             </div>
                             <div class="op-body">
                                 <div>
-                                    <span style="color:${isWorkerEntry ? '#ef4444' : '#2563eb'};" class="op-price-tag">
+                                    <span style="color:${isWorkerEntry ? '#ef4444' : 'var(--accent-blue)'};" class="op-price-tag">
                                         ${r.sale} ${window.currency}
                                     </span>
                                     <span style="font-size:8pt; color:var(--text-muted); margin-inline-start:4px;">(واصل: ${r.actualPaid} ${window.currency})</span>
                                 </div>
                                 <div style="display:flex; align-items:center; gap:8px;">
                                     ${!isWorker ? `<span style="font-size:8.5pt; color:var(--text-muted);">رأس المال: <b>${r.cost||0} ${window.currency}</b></span>` : ''}
-                                    <span style="color:var(--accent-green); font-weight:bold; font-size:10.5pt; background:rgba(16,185,129,0.1); padding:2px 6px; border-radius:6px;">+${(r.profit||0).toFixed(1)}</span>
+                                    <span style="color:var(--accent-green); font-weight:900; font-size:10.5pt; background:rgba(16,185,129,0.15); padding:2px 8px; border-radius:8px;">+${(r.profit||0).toFixed(1)}</span>
                                 </div>
                             </div>
                             <div class="op-footer">
@@ -2253,9 +2461,9 @@
                             datasets: [{
                                 data: chartData.length ? chartData : [0],
                                 borderColor: '#10b981',
-                                borderWidth: 1.5,
+                                borderWidth: 2,
                                 fill: true,
-                                backgroundColor: 'rgba(16, 185, 129, 0.05)',
+                                backgroundColor: 'rgba(16, 185, 129, 0.12)',
                                 tension: 0.3,
                                 pointRadius: 0
                             }]
@@ -2286,7 +2494,7 @@
         window.toggleWorkerFilter = function() {
             window.onlyWorkerFilter = !window.onlyWorkerFilter;
             const btn = document.getElementById('filter-worker-btn');
-            btn.style.backgroundColor = window.onlyWorkerFilter ? 'var(--danger)' : 'var(--accent-purple)';
+            btn.style.background = window.onlyWorkerFilter ? 'linear-gradient(180deg, #ef4444 0%, #dc2626 100%)' : 'linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%)';
             btn.innerText = window.onlyWorkerFilter ? '📋 عرض كل العمليات' : '👷‍♂️ عمليات العامل فقط';
             window.updateUI();
         };
@@ -2878,6 +3086,13 @@
             const savedUid = localStorage.getItem('saved_uid');
             const isWorker = localStorage.getItem('worker_mode') === 'true';
 
+            // تفعيل الوضع المحفوظ مسبقاً (ليلي أو نهاري)
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.getElementById('main-html-root').setAttribute('data-theme', savedTheme);
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            const btn = document.getElementById('theme-toggle-btn');
+            if (btn) btn.innerText = savedTheme === 'dark' ? '☀️' : '🌙';
+
             if (savedUid) {
                 document.getElementById('auth-flow-container').style.display = "none";
                 document.getElementById('main-app-content').style.display = "block";
@@ -2891,6 +3106,17 @@
             initYearMonthSelectors();
             window.initCategoryList();
             window.updateUI();
+
+            // إغلاق قائمة البروفايل تلقائياً عند النقر في أي مكان خارجها
+            document.addEventListener('click', (e) => {
+                const profileMenu = document.getElementById('google-profile-menu');
+                const widget = document.getElementById('logged-user-widget');
+                if (profileMenu && profileMenu.classList.contains('show')) {
+                    if (!profileMenu.contains(e.target) && !widget.contains(e.target)) {
+                        profileMenu.classList.remove('show');
+                    }
+                }
+            });
 
             // تسجيل Service Worker الخاص بـ PWA
             if ('serviceWorker' in navigator) {
